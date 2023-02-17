@@ -1,12 +1,13 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { server } from './setup';
-import { rest } from 'msw';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { server, rest, renderWithClient } from './setup';
 import Fetch from '@/Fetch';
 
 test('loads and displays greeting', async () => {
-  render(<Fetch url='/greeting' />);
+  const user = userEvent.setup();
+  renderWithClient(<Fetch url='/greeting' />);
 
-  fireEvent.click(screen.getByText('Load Greeting'));
+  await user.click(screen.getByText('Load Greeting'));
 
   await waitFor(() => screen.getByRole('heading'));
 
@@ -15,15 +16,16 @@ test('loads and displays greeting', async () => {
 });
 
 test('handles server error', async () => {
+  const user = userEvent.setup();
   server.use(
     rest.get('/greeting', (req, res, ctx) => {
       return res(ctx.status(500));
     })
   );
 
-  render(<Fetch url='/greeting' />);
+  renderWithClient(<Fetch url='/greeting' />);
 
-  fireEvent.click(screen.getByText('Load Greeting'));
+  await user.click(screen.getByText('Load Greeting'));
 
   await waitFor(() => screen.getByRole('alert'));
 
