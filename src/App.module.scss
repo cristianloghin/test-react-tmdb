@@ -1,0 +1,28 @@
+.App {
+  width: 100%;
+  position: relative;
+}
+.AppHeader {
+  display: flex;
+  align-items: center;
+  
+  .Logo {
+    img {
+      height: 3em;
+      margin-right: 2rem;
+      will-change: filter;
+      transition: filter 300ms;
+    }
+    &:hover img {
+      filter: drop-shadow(0 0 2em #646cffaa);
+    }
+  }
+  h1 {
+    margin: 0;
+    font-size: 2em;
+  }
+}
+
+.card {
+  padding: 2em;
+}

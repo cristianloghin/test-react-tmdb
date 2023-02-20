@@ -1,21 +1,23 @@
-import { expect, afterEach } from 'vitest';
+import { expect, afterEach, vitest } from 'vitest';
 import { render, cleanup } from '@testing-library/react';
 import matchers from '@testing-library/jest-dom/matchers';
 import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { server } from './mocks/server';
 
 // extends Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
 
-// setup mock server
-const server = setupServer(
-  rest.get('/greeting', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ greeting: 'hello there' }));
-  })
-);
-
 beforeAll(() => server.listen());
+beforeEach(() => {
+  const mockIO = vitest.fn();
+  mockIO.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null,
+  });
+  window.IntersectionObserver = mockIO;
+});
 afterEach(() => {
   server.resetHandlers();
   cleanup();
