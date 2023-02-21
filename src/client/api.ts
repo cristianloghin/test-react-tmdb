@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiConfig, SearchResults } from './models';
+import { ApiConfig, SearchResults, Details } from './models';
 
 const API_KEY = '2f6db91475e701ed85c2d06e5ba590c8';
 const API_BASE = 'https://api.themoviedb.org/3';
@@ -19,7 +19,9 @@ async function fetchResults(query: string, page: number) {
 }
 
 async function fetchMovieDetails(id: number) {
-  const res = await axios.get(`${API_BASE}/movie/${id}?api_key=${API_KEY}`);
+  const res = await axios.get<Details>(
+    `${API_BASE}/movie/${id}?api_key=${API_KEY}&append_to_response=credits`
+  );
   return res.data;
 }
 

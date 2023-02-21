@@ -1,4 +1,4 @@
-export type ApiConfig = {
+export interface ApiConfig {
   images: {
     base_url: string;
     secure_base_url?: string;
@@ -16,9 +16,9 @@ export type ApiConfig = {
     still_sizes?: 'w92' | 'w185' | 'w300' | 'original';
   };
   change_keys?: string[];
-};
+}
 
-export type Result = {
+export interface Result {
   poster_path?: string;
   adult?: boolean;
   overview?: string;
@@ -33,11 +33,45 @@ export type Result = {
   vote_count?: number;
   video?: boolean;
   vote_average?: number;
-};
+}
 
-export type SearchResults = {
+export interface SearchResults {
   page: number;
   results: Result[];
   total_pages: number;
   total_results: number;
+}
+
+export interface Details extends Omit<Result, 'genre_ids'> {
+  belongs_to_collection?: object;
+  budget?: number;
+  genres?: object[];
+  homepage?: string;
+  imdb_id?: string;
+  production_companies?: object[];
+  production_countries?: object[];
+  revenue?: number;
+  runtime?: number;
+  spoken_languages?: object[];
+  status?: string;
+  tagline?: string;
+  credits: {
+    cast: Cast[];
+    crew?: object[];
+  };
+}
+
+type Cast = {
+  adult?: boolean;
+  cast_id?: number;
+  character: string;
+  credit_id?: string;
+  gender?: number;
+  id?: number;
+  known_for_department?: string;
+  name: string;
+  order: number;
+  original_name?: string;
+  popularity?: number;
+  profile_path: string;
 };

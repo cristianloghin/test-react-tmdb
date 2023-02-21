@@ -1,24 +1,24 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithClient } from './setup';
+import { render } from './setup';
 import App from '@/App';
 
 describe('App', () => {
   it('renders headline', async () => {
-    renderWithClient(<App />);
+    render(<App />);
     expect(screen.getByRole('heading')).toHaveTextContent(
       'Find your favorite movie on The Movie Database!'
     );
   });
 
   it('renders search bar', async () => {
-    renderWithClient(<App />);
+    render(<App />);
     const searchContainer = screen.getByRole('search');
     expect(searchContainer).toBeInTheDocument();
   });
 
   it('renders placeholder in search field', async () => {
-    renderWithClient(<App />);
+    render(<App />);
     const searchInput = screen.getByPlaceholderText(
       'Please enter movie title...'
     );
@@ -26,20 +26,20 @@ describe('App', () => {
   });
 
   it('renders a search button', async () => {
-    renderWithClient(<App />);
+    render(<App />);
     const searchButton = screen.getByRole('button', { name: 'Search' });
     expect(searchButton).toBeInTheDocument();
   });
 
   it('renders an empty list at start', async () => {
-    renderWithClient(<App />);
+    render(<App />);
     const noContent = screen.getByRole('status');
     expect(noContent).toHaveTextContent('No results to display');
   });
 
   it('renders a list of movies when a search is performed', async () => {
     const user = userEvent.setup();
-    renderWithClient(<App />);
+    render(<App />);
 
     const searchInput = screen.getByRole('textbox');
     // Enter a movie to search for

@@ -1,167 +1,35 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { fetchResults, fetchMovieDetails } from '@/client/api';
-import { useConfig } from './config';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchResults } from '@/client/api';
+import useConfig from './config';
 import { formatData } from './utils';
 import { useAppSelector } from '@/store';
 
-export const useDetails = () => {
-  const movieId = useAppSelector((state) => state.movie.value);
-
-  return useQuery(['movie', movieId], () => fetchMovieDetails(movieId || 0), {
-    enabled: !!movieId,
-  });
-};
-
-export const useSearch = () => {
+export default () => {
   const { image_base_url } = useConfig();
-  const query = useAppSelector((store) => store.query.value);
-  const queryKey = query ? query.toLowerCase().split(' ') : [];
-  const { data, hasNextPage, isFetching, isFetchingNextPage, fetchNextPage } =
-    useInfiniteQuery(
-      ['search', ...queryKey],
-      ({ pageParam = 1 }) => fetchResults(encodeURI(query || ''), pageParam),
-      {
-        getNextPageParam: (lastPage, pages) => {
-          if (lastPage.total_pages == pages.length) {
-            return undefined;
-          }
-          return pages.length + 1;
-        },
-        enabled: !!query && !!image_base_url,
-        staleTime: Infinity,
-      }
-    );
+  const queryString = useAppSelector((store) => store.query.value);
+  const queryKey = queryString ? queryString.toLowerCase().split(' ') : [];
+
+  const query = useInfiniteQuery(
+    ['search', ...queryKey],
+    ({ pageParam = 1 }) =>
+      fetchResults(encodeURI(queryString || ''), pageParam),
+    {
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage.total_pages == pages.length) {
+          return undefined;
+        }
+        return pages.length + 1;
+      },
+      enabled: !!queryString && !!image_base_url,
+      staleTime: Infinity,
+    }
+  );
 
   return {
+    ...query,
     data:
-      image_base_url && data
-        ? formatData(image_base_url, data.pages)
+      image_base_url && query.data
+        ? formatData(image_base_url, query.data.pages)
         : undefined,
-    fetchNextPage,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
   };
 };
-
-/*
-import React from 'react'
-import Link from 'next/link'
-import axios from 'axios'
-import { useInView } from 'react-intersection-observer'
-import {
-  useInfiniteQuery,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-
-const queryClient = new QueryClient()
-
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Example />
-    </QueryClientProvider>
-  )
-}
-
-function Example() {
-  const { ref, inView } = useInView()
-
-  const {
-    status,
-    data,
-    error,
-    isFetching,
-    isFetchingNextPage,
-    isFetchingPreviousPage,
-    fetchNextPage,
-    fetchPreviousPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = useInfiniteQuery(
-    ['projects'],
-    async ({ pageParam = 0 }) => {
-      const res = await axios.get('/api/projects?cursor=' + pageParam)
-      return res.data
-    },
-    {
-      getPreviousPageParam: (firstPage) => firstPage.previousId ?? undefined,
-      getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
-    },
-  )
-
-  React.useEffect(() => {
-    if (inView) {
-      fetchNextPage()
-    }
-  }, [inView])
-
-  return (
-    <div>
-      <h1>Infinite Loading</h1>
-      {status === 'loading' ? (
-        <p>Loading...</p>
-      ) : status === 'error' ? (
-        <span>Error: {error.message}</span>
-      ) : (
-        <>
-          <div>
-            <button
-              onClick={() => fetchPreviousPage()}
-              disabled={!hasPreviousPage || isFetchingPreviousPage}
-            >
-              {isFetchingPreviousPage
-                ? 'Loading more...'
-                : hasPreviousPage
-                ? 'Load Older'
-                : 'Nothing more to load'}
-            </button>
-          </div>
-          {data.pages.map((page) => (
-            <React.Fragment key={page.nextId}>
-              {page.data.map((project) => (
-                <p
-                  style={{
-                    border: '1px solid gray',
-                    borderRadius: '5px',
-                    padding: '10rem 1rem',
-                    background: `hsla(${project.id * 30}, 60%, 80%, 1)`,
-                  }}
-                  key={project.id}
-                >
-                  {project.name}
-                </p>
-              ))}
-            </React.Fragment>
-          ))}
-          <div>
-            <button
-              ref={ref}
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage
-                ? 'Loading more...'
-                : hasNextPage
-                ? 'Load Newer'
-                : 'Nothing more to load'}
-            </button>
-          </div>
-          <div>
-            {isFetching && !isFetchingNextPage
-              ? 'Background Updating...'
-              : null}
-          </div>
-        </>
-      )}
-      <hr />
-      <Link href="/about">
-        <a>Go to another page</a>
-      </Link>
-      <ReactQueryDevtools initialIsOpen />
-    </div>
-  )
-}
-*/

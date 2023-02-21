@@ -1,11 +1,11 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { server, rest, renderWithClient } from './setup';
+import { render, server, rest } from './setup';
 import Fetch from '@/Fetch';
 
 test('loads and displays greeting', async () => {
   const user = userEvent.setup();
-  renderWithClient(<Fetch url='/greeting' />);
+  render(<Fetch url='/greeting' />);
 
   await user.click(screen.getByText('Load Greeting'));
 
@@ -23,7 +23,7 @@ test('handles server error', async () => {
     })
   );
 
-  renderWithClient(<Fetch url='/greeting' />);
+  render(<Fetch url='/greeting' />);
 
   await user.click(screen.getByText('Load Greeting'));
 

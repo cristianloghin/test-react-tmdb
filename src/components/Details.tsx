@@ -1,20 +1,26 @@
 import { useAppDispatch, setMovieId } from '@/store';
-import { useConfig } from '@/hooks/config';
-import { useDetails } from '@/hooks/search';
+import useDetails from '@/hooks/details';
 
 function MovieDetails() {
-  const { image_base_url } = useConfig();
-  const { data } = useDetails();
+  const { data, isLoading } = useDetails();
   const dispatch = useAppDispatch();
 
   function goBack() {
     dispatch(setMovieId(null));
   }
 
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div>
-      <p>Show details about movie</p>
-      <img src={`${image_base_url}/w1280/${data?.backdrop_path || ''}`} />
+      <h1>{data?.title}</h1>
+      <p>{data?.overview}</p>
+      <div>
+        {data?.credits.cast.map((actor) => (
+          <div>{actor.name}</div>
+        ))}
+      </div>
+      <img src={data?.backdrop_path} />
       <button onClick={goBack}>Go Back</button>
     </div>
   );

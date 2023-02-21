@@ -1,4 +1,4 @@
-import { ApiConfig, SearchResults } from '@/client/api';
+import { ApiConfig, SearchResults } from '@/client/models';
 import { rest } from 'msw';
 import { mockMovies } from './data';
 
@@ -15,11 +15,12 @@ export const handlers = [
     );
   }),
   rest.get(`${API_PATH}/search/movie`, (req, res, ctx) => {
+    const page = req.url.searchParams.get('page') || '1';
     const results = mockMovies(20);
     return res(
       ctx.status(200),
       ctx.json<SearchResults>({
-        page: 1,
+        page: Number(page),
         total_pages: 10,
         total_results: 200,
         results,

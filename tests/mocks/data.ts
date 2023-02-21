@@ -1,4 +1,4 @@
-import { Result } from '@/client/api';
+import { Result } from '@/client/models';
 
 function mockMovie(): Result {
   return {
