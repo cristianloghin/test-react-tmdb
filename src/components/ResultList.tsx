@@ -1,22 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, MouseEvent } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Result } from '@/client/api';
+import { useAppDispatch, setMovieId } from '@/store';
+import { useSearch } from '@/hooks/search';
 import styles from './ResultList.module.scss';
 
-function ResultList({
-  data,
-  fetchNextPage,
-  isFetching,
-  isFetchingNextPage,
-  hasNextPage,
-}: {
-  data: Result[] | undefined;
-  fetchNextPage: () => void;
-  isFetching: boolean;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean | undefined;
-}) {
+function ResultList() {
+  const dispatch = useAppDispatch();
+  const { data, fetchNextPage, isFetching, isFetchingNextPage, hasNextPage } =
+    useSearch();
+
   const { ref, inView } = useInView({ threshold: 1 });
+
+  const showMovieDetails = (id: number) => (event: MouseEvent) => {
+    event.preventDefault();
+    dispatch(setMovieId(id));
+  };
 
   useEffect(() => {
     if (inView) {
@@ -35,13 +33,18 @@ function ResultList({
           <>
             {data?.map((movie) => (
               <div className={styles.MovieCard} role='listitem' key={movie.id}>
-                {movie.poster_path && (
-                  <div className={styles.Poster}>
-                    <img src={movie.poster_path} alt={movie.title} />
-                  </div>
-                )}
-                <h3>{movie.title}</h3>
-                <p>{movie.release_date.split('-')[0]}</p>
+                <a
+                  href='https://google.com'
+                  onClick={showMovieDetails(movie.id)}
+                >
+                  {movie.poster_path && (
+                    <div className={styles.Poster}>
+                      <img src={movie.poster_path} alt={movie.title} />
+                    </div>
+                  )}
+                  <h3>{movie.title}</h3>
+                  <p>{movie.release_date.split('-')[0]}</p>
+                </a>
               </div>
             ))}
           </>

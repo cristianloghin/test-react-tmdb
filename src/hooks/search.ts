@@ -1,28 +1,25 @@
-import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchResults, Result, SearchResults } from '@/client/api';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { fetchResults, fetchMovieDetails } from '@/client/api';
+import { useConfig } from './config';
+import { formatData } from './utils';
+import { useAppSelector } from '@/store';
 
-function formatData(base_url: string, pages: SearchResults[]) {
-  return pages.reduce(
-    (acc: Result[], curr) =>
-      acc.concat(
-        curr.results
-          .filter((m) => m.poster_path)
-          .map((m) => ({
-            ...m,
-            poster_path: `${base_url}w185${m.poster_path}`,
-          }))
-      ),
-    []
-  );
-}
+export const useDetails = () => {
+  const movieId = useAppSelector((state) => state.movie.value);
 
-export const useSearch = (image_base_url: string | undefined) => {
-  const [searchValue, setSearchValue] = useState<string>('');
+  return useQuery(['movie', movieId], () => fetchMovieDetails(movieId || 0), {
+    enabled: !!movieId,
+  });
+};
+
+export const useSearch = () => {
+  const { image_base_url } = useConfig();
+  const query = useAppSelector((store) => store.query.value);
+  const queryKey = query ? query.toLowerCase().split(' ') : [];
   const { data, hasNextPage, isFetching, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery(
-      ['search', ...searchValue.toLowerCase().split(' ')],
-      ({ pageParam = 1 }) => fetchResults(encodeURI(searchValue), pageParam),
+      ['search', ...queryKey],
+      ({ pageParam = 1 }) => fetchResults(encodeURI(query || ''), pageParam),
       {
         getNextPageParam: (lastPage, pages) => {
           if (lastPage.total_pages == pages.length) {
@@ -30,7 +27,7 @@ export const useSearch = (image_base_url: string | undefined) => {
           }
           return pages.length + 1;
         },
-        enabled: !!searchValue && !!image_base_url,
+        enabled: !!query && !!image_base_url,
         staleTime: Infinity,
       }
     );
@@ -44,7 +41,6 @@ export const useSearch = (image_base_url: string | undefined) => {
     isFetching,
     isFetchingNextPage,
     hasNextPage,
-    search: setSearchValue,
   };
 };
 

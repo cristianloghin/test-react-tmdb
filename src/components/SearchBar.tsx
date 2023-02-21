@@ -1,12 +1,15 @@
 import { FormEvent, useState } from 'react';
+import { useAppDispatch, useAppSelector, setQuery } from '@/store';
 
-function SearchBar({ search }: { search: (v: string) => void }) {
-  const [input, setInput] = useState<string>('');
+function SearchBar() {
+  const query = useAppSelector((state) => state.query.value);
+  const dispatch = useAppDispatch();
+  const [input, setInput] = useState<string>(query || '');
 
   function submitForm(e: FormEvent) {
     e.preventDefault();
     // Update search value
-    search(input);
+    dispatch(setQuery(input));
   }
 
   return (

@@ -1,9 +1,11 @@
 import { expect, afterEach, vitest } from 'vitest';
+import { Provider } from 'react-redux';
 import { render, cleanup } from '@testing-library/react';
 import matchers from '@testing-library/jest-dom/matchers';
 import { rest } from 'msw';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { server } from './mocks/server';
+import { store } from '@/store';
 
 // extends Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
@@ -41,15 +43,19 @@ const createTestQueryClient = () =>
 export function renderWithClient(ui: React.ReactElement) {
   const testQueryClient = createTestQueryClient();
   const { rerender, ...result } = render(
-    <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>
+    </Provider>
   );
   return {
     ...result,
     rerender: (rerenderUi: React.ReactElement) =>
       rerender(
-        <QueryClientProvider client={testQueryClient}>
-          {rerenderUi}
-        </QueryClientProvider>
+        <Provider store={store}>
+          <QueryClientProvider client={testQueryClient}>
+            {rerenderUi}
+          </QueryClientProvider>
+        </Provider>
       ),
   };
 }
