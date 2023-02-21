@@ -5,7 +5,7 @@ import styles from './App.module.scss';
 import { useAppSelector } from './store';
 
 function App() {
-  const movieId = useAppSelector((state) => state.movie.value);
+  const movieId = useAppSelector((state) => state.main.movieId);
   return (
     <div className={styles.App}>
       <header className={styles.AppHeader}>

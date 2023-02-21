@@ -3,60 +3,118 @@ import userEvent from '@testing-library/user-event';
 import { render } from './setup';
 import App from '@/App';
 
-describe('App', () => {
-  it('renders headline', async () => {
-    render(<App />);
-    expect(screen.getByRole('heading')).toHaveTextContent(
-      'Find your favorite movie on The Movie Database!'
-    );
-  });
+test('renders headline', async () => {
+  render(<App />);
+  expect(screen.getByRole('heading')).toHaveTextContent(
+    'Find your favorite movie on The Movie Database!'
+  );
+});
 
-  it('renders search bar', async () => {
-    render(<App />);
-    const searchContainer = screen.getByRole('search');
-    expect(searchContainer).toBeInTheDocument();
-  });
+test('renders search bar', async () => {
+  render(<App />);
+  const searchContainer = screen.getByRole('search');
+  expect(searchContainer).toBeInTheDocument();
+});
 
-  it('renders placeholder in search field', async () => {
-    render(<App />);
-    const searchInput = screen.getByPlaceholderText(
-      'Please enter movie title...'
-    );
-    expect(searchInput).toBeInTheDocument();
-  });
+test('renders placeholder in search field', async () => {
+  render(<App />);
+  const searchInput = screen.getByPlaceholderText(
+    'Please enter movie title...'
+  );
+  expect(searchInput).toBeInTheDocument();
+});
 
-  it('renders a search button', async () => {
-    render(<App />);
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    expect(searchButton).toBeInTheDocument();
-  });
+test('renders a search button', async () => {
+  render(<App />);
+  const searchButton = screen.getByRole('button', { name: 'Search' });
+  expect(searchButton).toBeInTheDocument();
+});
 
-  it('renders an empty list at start', async () => {
-    render(<App />);
-    const noContent = screen.getByRole('status');
-    expect(noContent).toHaveTextContent('No results to display');
-  });
+test('renders an empty list at start', async () => {
+  render(<App />);
+  const noContent = screen.getByRole('status');
+  expect(noContent).toHaveTextContent('No results to display');
+});
 
-  it('renders a list of movies when a search is performed', async () => {
-    const user = userEvent.setup();
-    render(<App />);
+test('renders a list of movies when a search is performed', async () => {
+  const user = userEvent.setup();
+  render(<App />);
 
-    const searchInput = screen.getByRole('textbox');
-    // Enter a movie to search for
-    await user.type(searchInput, 'Foo man chu');
-    expect(searchInput).toHaveValue('Foo man chu');
+  const searchInput = screen.getByRole('textbox');
+  // Enter a movie to search for
+  await user.type(searchInput, 'Foo man chu');
+  expect(searchInput).toHaveValue('Foo man chu');
 
-    // Click the search button
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
+  // Click the search button
+  const searchButton = screen.getByRole('button', { name: 'Search' });
+  await user.click(searchButton);
 
-    // Show results
-    const results = await screen.findByRole('list');
-    expect(results).toBeInTheDocument();
-    expect(results.childElementCount).toBe(20);
-  });
+  // Show results
+  const results = screen.getByRole('list');
+  expect(results).toBeInTheDocument();
+  expect(results.childElementCount).toBe(20);
+});
 
-  it('renders movie details', () => {});
+test('renders more movies when show more button is clicked', async () => {
+  const user = userEvent.setup();
+  render(<App />);
 
-  it('renders more search results on scroll', () => {});
+  const searchInput = screen.getByRole('textbox');
+  const searchButton = screen.getByRole('button', { name: 'Search' });
+  await user.type(searchInput, 'Foo man chu');
+  await user.click(searchButton);
+
+  const results = screen.getByRole('list');
+  expect(results).toBeInTheDocument();
+  // Show first 20 results
+  expect(results.childElementCount).toBe(20);
+
+  const showMoreButton = screen.getByRole('button', { name: /show more/i });
+  expect(showMoreButton).toBeInTheDocument();
+
+  await user.click(showMoreButton);
+  // Show 20 more results
+  expect(results.childElementCount).toBe(40);
+});
+
+test('renders movie details', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const searchInput = screen.getByRole('textbox');
+  const searchButton = screen.getByRole('button', { name: 'Search' });
+  await user.type(searchInput, 'Foo man chu');
+  await user.click(searchButton);
+
+  const movieCards = screen.getAllByRole('listitem');
+  expect(movieCards.length).toBe(20);
+
+  const movieCardButton = movieCards[0].querySelector('button');
+
+  await user.click(movieCardButton!);
+  const title = screen.getByRole('heading', { level: 2 });
+  expect(title).toBeInTheDocument();
+  expect(title).toHaveTextContent('The Day');
+});
+
+test('returns to the movie list when go back is clicked', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const searchInput = await screen.findByRole('textbox');
+  const searchButton = screen.getByRole('button', { name: 'Search' });
+  await user.type(searchInput, 'Foo man chu');
+  await user.click(searchButton);
+
+  const movieCards = screen.getAllByRole('listitem');
+  expect(movieCards.length).toBe(20);
+
+  const movieCardButton = movieCards[0].querySelector('button');
+
+  await user.click(movieCardButton!);
+  const goBackButton = screen.getByRole('button', { name: /go back/i });
+  expect(goBackButton).toBeInTheDocument();
+
+  await user.click(goBackButton);
+  expect(goBackButton).not.toBeInTheDocument();
 });

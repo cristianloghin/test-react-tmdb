@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { useAppDispatch, useAppSelector, setQuery } from '@/store';
 
 function SearchBar() {
-  const query = useAppSelector((state) => state.query.value);
+  const query = useAppSelector((state) => state.main.query);
   const dispatch = useAppDispatch();
   const [input, setInput] = useState<string>(query || '');
 

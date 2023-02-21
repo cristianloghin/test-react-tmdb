@@ -67,7 +67,7 @@ type Cast = {
   character: string;
   credit_id?: string;
   gender?: number;
-  id?: number;
+  id: number;
   known_for_department?: string;
   name: string;
   order: number;

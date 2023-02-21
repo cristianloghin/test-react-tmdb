@@ -9,20 +9,25 @@ function MovieDetails() {
     dispatch(setMovieId(null));
   }
 
+  function getScore(average: number) {
+    return Math.round(average * 10) + '%';
+  }
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>{data?.title}</h1>
+    <section>
+      <h2>{data?.title}</h2>
       <p>{data?.overview}</p>
       <div>
         {data?.credits.cast.map((actor) => (
-          <div>{actor.name}</div>
+          <div key={actor.id}>{actor.name}</div>
         ))}
       </div>
+      <div>{data?.vote_average && getScore(data.vote_average)}</div>
       <img src={data?.backdrop_path} />
       <button onClick={goBack}>Go Back</button>
-    </div>
+    </section>
   );
 }
 

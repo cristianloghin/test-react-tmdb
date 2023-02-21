@@ -6,7 +6,7 @@ import { useAppSelector } from '@/store';
 
 export default () => {
   const { image_base_url } = useConfig();
-  const queryString = useAppSelector((store) => store.query.value);
+  const queryString = useAppSelector((store) => store.main.query);
   const queryKey = queryString ? queryString.toLowerCase().split(' ') : [];
 
   const query = useInfiniteQuery(

@@ -1,4 +1,4 @@
-import { ApiConfig, SearchResults } from '@/client/models';
+import { ApiConfig, SearchResults, Details } from '@/client/models';
 import { rest } from 'msw';
 import { mockMovies } from './data';
 
@@ -24,6 +24,28 @@ export const handlers = [
         total_pages: 10,
         total_results: 200,
         results,
+      })
+    );
+  }),
+  rest.get(`${API_PATH}/movie/:movieId`, (req, res, ctx) => {
+    const { id } = req.params;
+    return res(
+      ctx.status(200),
+      ctx.json<Details>({
+        id: Number(id),
+        title: 'The Day',
+        release_date: '2020-02-01',
+        credits: {
+          cast: [
+            {
+              id: 421645216,
+              name: 'Bob',
+              character: 'Bill',
+              order: 0,
+              profile_path: '1234567',
+            },
+          ],
+        },
       })
     );
   }),

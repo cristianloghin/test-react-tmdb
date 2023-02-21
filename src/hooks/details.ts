@@ -6,7 +6,7 @@ import { Details } from '@/client/models';
 
 export default () => {
   const { image_base_url } = useConfig();
-  const movieId = useAppSelector((state) => state.movie.value);
+  const movieId = useAppSelector((state) => state.main.movieId);
 
   const query = useQuery(
     ['movie', movieId],

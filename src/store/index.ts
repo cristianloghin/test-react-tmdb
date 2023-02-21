@@ -1,50 +1,35 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-interface QueryState {
-  value: string;
+interface MainState {
+  query: string | undefined;
+  movieId: number | undefined;
 }
 
-interface MovieIdState {
-  value: number | null;
-}
+const initialMainState = {
+  query: undefined,
+  movieId: undefined,
+} as MainState;
 
-const initialQueryState = {
-  value: '',
-} as QueryState;
-
-const initialMovieIdState = {
-  value: null,
-} as MovieIdState;
-
-const querySlice = createSlice({
-  name: 'query',
-  initialState: initialQueryState,
+const mainSlice = createSlice({
+  name: 'main',
+  initialState: initialMainState,
   reducers: {
     setQuery: (state, action) => {
-      state.value = action.payload;
+      state.query = action.payload;
     },
-  },
-});
-
-const { setQuery } = querySlice.actions;
-
-const movieSlice = createSlice({
-  name: 'movie',
-  initialState: initialMovieIdState,
-  reducers: {
     setMovieId: (state, action) => {
-      state.value = action.payload;
+      state.movieId = action.payload;
     },
   },
 });
 
-const { setMovieId } = movieSlice.actions;
+const { setQuery, setMovieId } = mainSlice.actions;
+const mainReducer = mainSlice.reducer;
 
 const store = configureStore({
   reducer: {
-    query: querySlice.reducer,
-    movie: movieSlice.reducer,
+    main: mainReducer,
   },
 });
 
@@ -54,4 +39,13 @@ type AppDispatch = typeof store.dispatch;
 const useAppDispatch: () => AppDispatch = useDispatch;
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export { store, setQuery, setMovieId, useAppDispatch, useAppSelector };
+export {
+  store,
+  setQuery,
+  setMovieId,
+  // queryReducer,
+  // movieReducer,
+  mainReducer,
+  useAppDispatch,
+  useAppSelector,
+};

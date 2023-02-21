@@ -13,7 +13,7 @@ function ResultList() {
   };
 
   return (
-    <div>
+    <section>
       {!data ? (
         <div role='status' aria-label='Search results'>
           No results to display.
@@ -22,17 +22,27 @@ function ResultList() {
         <div className={styles.MovieList} role='list'>
           <>
             {data?.map((movie) => (
-              <div className={styles.MovieCard} role='listitem' key={movie.id}>
-                <button type='button' onClick={showMovieDetails(movie.id)}>
+              <article
+                className={styles.MovieCard}
+                role='listitem'
+                key={movie.id}
+              >
+                <button
+                  type='button'
+                  aria-labelledby={String(movie.id)}
+                  onClick={showMovieDetails(movie.id)}
+                >
                   {movie.poster_path && (
                     <div className={styles.Poster}>
                       <img src={movie.poster_path} alt={movie.title} />
                     </div>
                   )}
-                  <h3>{movie.title}</h3>
+                  <h3>
+                    <label htmlFor={String(movie.id)}>{movie.title}</label>
+                  </h3>
                   <p>{movie.release_date.split('-')[0]}</p>
                 </button>
-              </div>
+              </article>
             ))}
           </>
         </div>
@@ -42,7 +52,7 @@ function ResultList() {
           {hasNextPage ? 'Show More' : 'Nothing more to load'}
         </button>
       </div>
-    </div>
+    </section>
   );
 }
 
