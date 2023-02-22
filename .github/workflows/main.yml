@@ -51,29 +51,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-# on:
-#   push:
-#     branches:
-#       - main
-# permissions:
-#   contents: write
-# jobs:
-#   test-build-deploy:
-#     name: Test, build and deploy app
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout 🛎
-#         uses: actions/checkout@v3
-#       - name: Setup 🎁
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 16
-#       - name: Test and build 🧪
-#         run: |
-#           npm install
-#           npm run test
-#           npm run build
-#       - name: Deploy 🚀
-#         uses: JamesIves/github-pages-deploy-action@v4
-#         with:
-#           folder: dist
