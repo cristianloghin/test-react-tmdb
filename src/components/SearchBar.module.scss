@@ -1,0 +1,49 @@
+.SearchBar {
+  background: #1a1a1a;
+  border-radius: 1rem;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  will-change: filter;
+  transition: filter 300ms;
+
+  &:hover {
+    filter: drop-shadow(0 0 2em var(--primary-faded));
+  }
+
+  > form > div {
+    display: flex;
+  }
+  
+  .SearchIcon {
+    flex: 0 0 40px;
+    display: flex;
+    place-items: center;
+    button, img {
+      display: block;
+    }
+  }
+
+  input[type="text"] {
+    flex: 1 1 auto;
+    color: var(--white-text);
+    font-size: 1.5rem;
+    background-color: transparent;
+    outline: none;
+    appearance: none;
+    border: none;
+    overflow: hidden;
+  }
+
+  input[type="submit"] {
+    flex: 0 0 auto;
+    margin-left: 1rem;
+    color: #1a1a1a;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: var(--primary-color);
+    padding: .75rem 1rem;
+    border-radius: .5rem;
+  }
+}
+

@@ -30,10 +30,9 @@ test('renders a search button', async () => {
   expect(searchButton).toBeInTheDocument();
 });
 
-test('renders an empty list at start', async () => {
+test('does not render result list at start', async () => {
   render(<App />);
-  const noContent = screen.getByRole('status');
-  expect(noContent).toHaveTextContent('No results to display');
+  expect(screen.queryByRole('list')).toBeNull();
 });
 
 test('renders a list of movies when a search is performed', async () => {
@@ -50,7 +49,7 @@ test('renders a list of movies when a search is performed', async () => {
   await user.click(searchButton);
 
   // Show results
-  const results = screen.getByRole('list');
+  const results = await screen.findByRole('list');
   expect(results).toBeInTheDocument();
   expect(results.childElementCount).toBe(20);
 });
@@ -64,7 +63,7 @@ test('renders more movies when show more button is clicked', async () => {
   await user.type(searchInput, 'Foo man chu');
   await user.click(searchButton);
 
-  const results = screen.getByRole('list');
+  const results = await screen.findByRole('list');
   expect(results).toBeInTheDocument();
   // Show first 20 results
   expect(results.childElementCount).toBe(20);
@@ -86,7 +85,7 @@ test('renders movie details', async () => {
   await user.type(searchInput, 'Foo man chu');
   await user.click(searchButton);
 
-  const movieCards = screen.getAllByRole('listitem');
+  const movieCards = await screen.findAllByRole('listitem');
   expect(movieCards.length).toBe(20);
 
   const movieCardButton = movieCards[0].querySelector('button');
@@ -106,7 +105,7 @@ test('returns to the movie list when go back is clicked', async () => {
   await user.type(searchInput, 'Foo man chu');
   await user.click(searchButton);
 
-  const movieCards = screen.getAllByRole('listitem');
+  const movieCards = await screen.findAllByRole('listitem');
   expect(movieCards.length).toBe(20);
 
   const movieCardButton = movieCards[0].querySelector('button');

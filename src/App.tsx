@@ -6,6 +6,8 @@ import { useAppSelector } from './store';
 
 function App() {
   const movieId = useAppSelector((state) => state.main.movieId);
+  const searchQuery = useAppSelector((state) => state.main.query);
+
   return (
     <div className={styles.App}>
       <header className={styles.AppHeader}>
@@ -21,7 +23,7 @@ function App() {
       ) : (
         <>
           <SearchBar />
-          <ResultList />
+          {searchQuery && <ResultList />}
         </>
       )}
     </div>
