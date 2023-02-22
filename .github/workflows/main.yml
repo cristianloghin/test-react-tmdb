@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write
 jobs:
   test-build-deploy:
     name: Test, build and deploy app
@@ -13,7 +15,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Test 🧪
+      - name: Test and build 🧪
         run: |
           npm install
           npm run test
+          npm run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
