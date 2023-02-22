@@ -5,6 +5,7 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/test-react-tmdb/',
   plugins: [react()],
   resolve: {
     alias: {
