@@ -1,3 +1,10 @@
+.NoResults {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--alert-color);
+}
+
 .MovieList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

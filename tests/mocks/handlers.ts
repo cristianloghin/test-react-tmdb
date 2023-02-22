@@ -15,15 +15,28 @@ export const handlers = [
     );
   }),
   rest.get(`${API_PATH}/search/movie`, (req, res, ctx) => {
+    const query = req.url.searchParams.get('query');
     const page = req.url.searchParams.get('page') || '1';
-    const results = mockMovies(20);
+
+    if (query === 'Invalid name') {
+      return res(
+        ctx.status(200),
+        ctx.json<SearchResults>({
+          page: Number(page),
+          total_pages: 0,
+          total_results: 0,
+          results: [],
+        })
+      );
+    }
+
     return res(
       ctx.status(200),
       ctx.json<SearchResults>({
         page: Number(page),
         total_pages: 10,
         total_results: 200,
-        results,
+        results: mockMovies(20),
       })
     );
   }),

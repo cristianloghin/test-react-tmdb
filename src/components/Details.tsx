@@ -20,7 +20,7 @@ function MovieScore({ score }: { score: number }) {
 
 function CastMember({ actor }: { actor: CastMemberType }) {
   return (
-    <div key={actor.id} className={styles.CastMember}>
+    <div className={styles.CastMember}>
       <div
         className={styles.Profile}
         style={{ backgroundImage: `url(${actor.profile_path || noPhotoPath})` }}
@@ -58,7 +58,7 @@ function MovieDetails() {
         <h3>Top billed cast</h3>
         <div className={styles.MovieCast}>
           {data?.credits.cast.map((actor) => (
-            <CastMember actor={actor} />
+            <CastMember key={actor.id} actor={actor} />
           ))}
         </div>
         <div className={styles.BackButton}>

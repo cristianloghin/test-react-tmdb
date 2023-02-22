@@ -13,7 +13,8 @@
   --primary-faded: rgba(1, 180, 228, .3);
   --white-text: rgb(248, 244, 231);
   --black-one: rgb(36, 36, 36);
-  --black-two: rgb(26, 26, 26); 
+  --black-two: rgb(26, 26, 26);
+  --alert-color: rgb(200, 50, 50);
 }
 
 body {

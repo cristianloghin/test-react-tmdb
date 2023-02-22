@@ -35,6 +35,22 @@ test('does not render result list at start', async () => {
   expect(screen.queryByRole('list')).toBeNull();
 });
 
+test('renders a notification if no results are found', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const searchInput = screen.getByRole('textbox');
+  await user.type(searchInput, 'Invalid name');
+
+  // Press the enter key to search
+  await user.keyboard('[Enter]');
+  const notification = await screen.findByRole('status');
+  const list = await screen.queryByRole('list');
+
+  expect(notification).toBeInTheDocument();
+  expect(list).toBeNull();
+});
+
 test('renders a list of movies when a search is performed', async () => {
   const user = userEvent.setup();
   render(<App />);

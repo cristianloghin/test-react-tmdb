@@ -15,9 +15,13 @@ function ResultList() {
 
   return (
     <section>
-      {!data ? (
-        <div role='status' aria-label='Search results'>
-          No results to display.
+      {data?.length === 0 ? (
+        <div
+          className={styles.NoResults}
+          role='status'
+          aria-label='Search results'
+        >
+          No results to display 😢
         </div>
       ) : (
         <div className={styles.MovieList} role='list'>
