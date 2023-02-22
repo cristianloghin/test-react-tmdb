@@ -48,7 +48,7 @@ function SearchBar() {
             onChange={(e) => setInput(e.target.value)}
             placeholder='Please enter movie title...'
           />
-          <input className='button' type='submit' value='Search' />
+          <input className='button action' type='submit' value='Search' />
         </div>
       </form>
     </section>

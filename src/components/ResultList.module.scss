@@ -5,21 +5,50 @@
 }
 
 .MovieCard {
-  text-align: left;
+
+  display: flex;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    padding: .5rem;
+    width: 100%;
+    height: 100%;
+    background-color: var(--black-one);
+  }
+
+  button:hover {
+    background-color: var(--black-two);
+    filter: drop-shadow(0 0 2em var(--primary-faded));
+  }
 
   h3 {
+    width: 100%;
     font-size: 1.25rem;
     margin-bottom: 0;
+    color: var(--white-text);
   }
 
   p {
-    margin-top: 0;
+    margin: .5rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100%;
+    color: var(--primary-color);
   }
 
   .Poster {
-    width: 100%;
-    img {
-      display: block;
-    }
+    border-radius: .5rem;
+    width: 185px;
+    height: 278px;
+    background-size: cover;
+    margin: 0 auto;
   }
+}
+
+.MoreButton {
+  display: flex;
+  margin: 2rem auto;
+  justify-content: center;
 }

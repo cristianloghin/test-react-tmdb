@@ -56,12 +56,12 @@ export interface Details extends Omit<Result, 'genre_ids'> {
   status?: string;
   tagline?: string;
   credits: {
-    cast: Cast[];
+    cast: CastMember[];
     crew?: object[];
   };
 }
 
-type Cast = {
+export type CastMember = {
   adult?: boolean;
   cast_id?: number;
   character: string;

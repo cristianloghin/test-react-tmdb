@@ -3,6 +3,7 @@ import { useAppSelector } from '@/store';
 import useConfig from './config';
 import { fetchMovieDetails } from '@/client/api';
 import { Details } from '@/client/models';
+import { formatCredits } from './utils';
 
 export default () => {
   const { image_base_url } = useConfig();
@@ -23,7 +24,10 @@ export default () => {
       image_base_url && query.data
         ? ({
             ...query.data,
-            backdrop_path: `${image_base_url}/w1280/${query.data.backdrop_path}`,
+            credits: formatCredits(image_base_url, query.data.credits),
+            backdrop_path: query.data.backdrop_path
+              ? `${image_base_url}/w1280/${query.data.backdrop_path}`
+              : undefined,
           } as Details)
         : undefined,
   };

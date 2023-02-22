@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react';
 import { useAppDispatch, setMovieId } from '@/store';
+import noPosterPath from '@/assets/no-poster.png';
 import useSearch from '@/hooks/search';
 import styles from './ResultList.module.scss';
 
@@ -29,14 +30,19 @@ function ResultList() {
               >
                 <button
                   type='button'
+                  className='button'
                   aria-labelledby={String(movie.id)}
                   onClick={showMovieDetails(movie.id)}
                 >
-                  {movie.poster_path && (
-                    <div className={styles.Poster}>
-                      <img src={movie.poster_path} alt={movie.title} />
-                    </div>
-                  )}
+                  <div
+                    className={styles.Poster}
+                    style={{
+                      backgroundImage: `url(${
+                        movie.poster_path || noPosterPath
+                      })`,
+                    }}
+                  ></div>
+
                   <h3>
                     <label htmlFor={String(movie.id)}>{movie.title}</label>
                   </h3>
@@ -47,11 +53,17 @@ function ResultList() {
           </>
         </div>
       )}
-      <div>
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage}>
-          {hasNextPage ? 'Show More' : 'Nothing more to load'}
-        </button>
-      </div>
+      {hasNextPage && (
+        <div className={styles.MoreButton}>
+          <button
+            className='button action'
+            onClick={() => fetchNextPage()}
+            disabled={!hasNextPage}
+          >
+            Show More
+          </button>
+        </div>
+      )}
     </section>
   );
 }
