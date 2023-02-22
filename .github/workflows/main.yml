@@ -3,29 +3,16 @@ on:
     branches:
       - main
 jobs:
-  test:
-    name: run tests
+  test-build-deploy:
+    name: Test, build and deploy app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+      - name: Test 🧪
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: npm install and test
         run: |
           npm install
           npm run test
-  build:
-    name: build app
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: npm install and build
-        run: |
-          npm install
-          npm run build
